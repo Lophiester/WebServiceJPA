@@ -1,6 +1,6 @@
 package com.lophiester.webService.controllers;
 
-import com.lophiester.webService.entities.User;
+import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
     @GetMapping
-    public List<User> findAll() {
-      return userService.findAll();
+    public List<UserDTO> findAll() {
+        return userService.findAll();
     }
 }

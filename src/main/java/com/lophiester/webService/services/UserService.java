@@ -1,6 +1,6 @@
 package com.lophiester.webService.services;
 
-import com.lophiester.webService.entities.User;
+import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        return userRepository.findAll().stream().map(UserDTO::new).toList();
     }
 }

@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable Long id) {
-        return userService.findById(id);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.findById(id));
     }
 
     @DeleteMapping("/{id}")

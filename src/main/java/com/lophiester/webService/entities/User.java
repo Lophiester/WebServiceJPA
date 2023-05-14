@@ -1,4 +1,4 @@
-package com.lophiester.webService.entites;
+package com.lophiester.webService.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

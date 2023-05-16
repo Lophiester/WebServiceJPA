@@ -1,13 +1,13 @@
 package com.lophiester.webService.controllers;
 
+import com.lophiester.webService.entities.User;
 import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
-import java.util.List;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
@@ -33,4 +33,20 @@ public class UserController {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping
+    public ResponseEntity<UserDTO> save(@RequestBody UserDTO userDTO) {
+        userService.save(userDTO);
+        URI uri = URI.create("/users/" + userDTO.getId());
+        return ResponseEntity.created(uri).body(userDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO, @PathVariable Long id) {
+        userService.update(userDTO, id);
+        return ResponseEntity.ok().body(userDTO);
+    }
+
+
 }
+

@@ -1,6 +1,8 @@
 package com.lophiester.webService.services;
 
 import com.lophiester.webService.entities.User;
+import com.lophiester.webService.entities.User;
+import com.lophiester.webService.entities.dto.ProductDTO;
 import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.repositories.UserRepository;
 import com.lophiester.webService.services.exceptions.ResourceNotFoundException;
@@ -41,7 +43,6 @@ public class UserService {
     @Transactional
     public UserDTO save(UserDTO userDTO) {
         User user = new User();
-        user.setId(userDTO.getId());
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
@@ -59,6 +60,5 @@ public class UserService {
         user.setPassword(userDTO.getPassword());
         userRepository.save(user);
         return new UserDTO(user);
-    }
-}
+}}
 

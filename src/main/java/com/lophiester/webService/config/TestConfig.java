@@ -37,9 +37,9 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3));
 
-        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS);
-        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING);
-        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED);
+        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS,u1);
+        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING,u2);
+        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED,u1);
 
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
 

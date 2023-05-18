@@ -1,11 +1,14 @@
 package com.lophiester.webService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,10 @@ public class User {
     private String password;
 
 
+   @Setter(AccessLevel.PROTECTED)
+   @JsonIgnore
+   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+   private static Set<Order> orders = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

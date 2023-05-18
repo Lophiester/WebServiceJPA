@@ -28,10 +28,15 @@ public class Order {
 
     private Integer orderStatus;
 
-    public Order(Long id,Instant date, OrderStatus orderStatus) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Order(Long id,Instant date, OrderStatus orderStatus,User user) {
         this.id = id;
         this.date = date;
         setOrderStatus(orderStatus);
+        this.user = user;
     }
 
     public OrderStatus getOrderStatus() {

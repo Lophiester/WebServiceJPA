@@ -1,7 +1,10 @@
 package com.lophiester.webService.config;
 
+import com.lophiester.webService.entities.Order;
 import com.lophiester.webService.entities.Product;
 import com.lophiester.webService.entities.User;
+import com.lophiester.webService.enums.OrderStatus;
+import com.lophiester.webService.repositories.OrderRepository;
 import com.lophiester.webService.repositories.ProductRepository;
 import com.lophiester.webService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.time.Instant;
 import java.util.Arrays;
 
 @Configuration
@@ -21,6 +25,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -29,6 +36,12 @@ public class TestConfig implements CommandLineRunner {
         User u3 = new User(null, "Luan Nav", "luan@gmail.com", "121212", "2131231");
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3));
+
+        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS);
+        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING);
+        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED);
+
+        orderRepository.saveAll(Arrays.asList(o1, o2, o3));
 
         Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
         Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");

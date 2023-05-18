@@ -1,9 +1,11 @@
 package com.lophiester.webService.config;
 
+import com.lophiester.webService.entities.Category;
 import com.lophiester.webService.entities.Order;
 import com.lophiester.webService.entities.Product;
 import com.lophiester.webService.entities.User;
 import com.lophiester.webService.enums.OrderStatus;
+import com.lophiester.webService.repositories.CategoryRepository;
 import com.lophiester.webService.repositories.OrderRepository;
 import com.lophiester.webService.repositories.ProductRepository;
 import com.lophiester.webService.repositories.UserRepository;
@@ -28,6 +30,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -50,5 +55,11 @@ public class TestConfig implements CommandLineRunner {
         Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+
+        Category cat1 = new Category(null, "Electronics");
+        Category cat2 = new Category(null, "Books");
+        Category cat3 = new Category(null, "Computers");
+
+        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
     }
 }

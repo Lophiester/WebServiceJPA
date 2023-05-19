@@ -18,34 +18,39 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDTO> findAll() {
-        List<Category> list = categoryRepository.findAll();
-        return list.stream().map(CategoryDTO::new).toList();
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public CategoryDTO findById(Long id) {
+    public Category findById(Long id) {
         Optional<Category> obj = categoryRepository.findById(id);
-        return obj.map(CategoryDTO::new).orElseThrow(() -> new ResourceNotFoundException(id));
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @Transactional
-    public CategoryDTO save(CategoryDTO dto) {
-        Category category = new Category();
-        category.setName(dto.getName());
-        categoryRepository.save(category);
-        return new CategoryDTO(category);
+    public Category save(Category obj) {
+        obj.setId(null);
+        return categoryRepository.save(obj);
     }
 
     @Transactional
-    public CategoryDTO update(CategoryDTO dto, Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        category.setName(dto.getName());
-        categoryRepository.save(category);
-        return new CategoryDTO(category);
+    public Category update(Category oldObj) {
+        Category newObj = findById(oldObj.getId());
+        updateData(newObj, oldObj);
+        return categoryRepository.save(oldObj);
     }
+
     @Transactional
     public void delete(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    public Category fromDTO(CategoryDTO dto) {
+        return new Category(dto.getId(), dto.getName());
+    }
+
+    public void updateData(Category newObj, Category oldObj) {
+        newObj.setName(oldObj.getName());
     }
 }

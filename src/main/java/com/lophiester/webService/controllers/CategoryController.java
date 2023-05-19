@@ -1,7 +1,9 @@
 package com.lophiester.webService.controllers;
 
+import com.lophiester.webService.entities.Category;
 import com.lophiester.webService.entities.dto.CategoryDTO;
 import com.lophiester.webService.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +21,30 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll() {
+    public ResponseEntity<List<Category>> findAll() {
+        Category category = categoryService.fromDTO(new CategoryDTO(new Category()));
         return ResponseEntity.ok().body(categoryService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<Category> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<Category> save(@Valid @RequestBody CategoryDTO categoryDTO) {
+        Category category = categoryService.fromDTO(categoryDTO);
         URI uri = create("/categories" + categoryDTO.getId());
-        return ResponseEntity.created(uri).body(categoryService.save(categoryDTO));
+        return ResponseEntity.created(uri).body(categoryService.save(category));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update( @RequestBody CategoryDTO categoryDTO,@PathVariable Long id) {
-        return ResponseEntity.ok().body(categoryService.update(categoryDTO,id));
+    public ResponseEntity<Category> update(@Valid @RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
+        Category category = categoryService.fromDTO(categoryDTO);
+        category.setId(id);
+        return ResponseEntity.ok().body(categoryService.update(category));
     }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         categoryService.delete(id);

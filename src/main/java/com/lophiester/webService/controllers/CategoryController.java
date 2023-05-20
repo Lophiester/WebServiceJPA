@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.net.URI.create;
 
@@ -21,9 +22,10 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-        Category category = categoryService.fromDTO(new CategoryDTO(new Category()));
-        return ResponseEntity.ok().body(categoryService.findAll());
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+     List<Category> categories = categoryService.findAll();
+     List<CategoryDTO>dto= categories.stream().map(CategoryDTO::new).collect(Collectors.toList());
+     return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping("/{id}")

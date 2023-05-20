@@ -3,7 +3,8 @@ package com.lophiester.webService.services;
 import com.lophiester.webService.entities.Product;
 import com.lophiester.webService.entities.dto.ProductDTO;
 import com.lophiester.webService.repositories.ProductRepository;
-import com.lophiester.webService.services.exceptions.ResourceNotFoundException;
+import com.lophiester.webService.services.exceptions.DataIntegrityException;
+import com.lophiester.webService.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,42 +20,56 @@ public class ProductService {
     ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public List<ProductDTO> findAll() {
-        return productRepository.findAll().stream().map(ProductDTO::new).toList();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public ProductDTO findById(Long id) {
+    public Product findById(Long id) {
         Optional<Product> list = productRepository.findById(id);
-        return list.map(ProductDTO::new).orElseThrow(() -> new ResourceNotFoundException(id));
+        return list.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Product.class.getName()));
     }
 
     @Transactional
     public void deleteById(Long id) {
-        if (productRepository.existsById(id)) {
+        findById(id);
+        try {
             productRepository.deleteById(id);
-        } else throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityException e) {
+            throw new DataIntegrityException("Cannot delete user with id: " + id + " because it is used in other entities");
+        } catch (ObjectNotFoundException e) {
+            new ObjectNotFoundException("Object not found" + Product.class.getName() + "with id: " + id);
+        }
     }
 
     @Transactional
-    public ProductDTO save(ProductDTO productDTO) {
+    public Product save(Product product) {
+        product.setId(null);
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public Product update(Product oldObj) {
+        Product newObj = findById(oldObj.getId());
+        updateData(newObj, oldObj);
+        return (newObj);
+    }
+
+
+    public Product fromDTO(ProductDTO productDTO) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
-        productRepository.save(product);
-        return new ProductDTO(product);
+        return product;
     }
 
-    @Transactional
-    public ProductDTO update(ProductDTO productDTO, Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setImgUrl(productDTO.getImgUrl());
-        productRepository.save(product);
-        return new ProductDTO(product);
+    public void updateData(Product newObj, Product oldObj) {
+        newObj.setName(oldObj.getName());
+        newObj.setDescription(oldObj.getDescription());
+        newObj.setPrice(oldObj.getPrice());
+        newObj.setImgUrl(oldObj.getImgUrl());
+        productRepository.save(newObj);
     }
 }

@@ -3,7 +3,7 @@ package com.lophiester.webService.services;
 import com.lophiester.webService.entities.Category;
 import com.lophiester.webService.entities.dto.CategoryDTO;
 import com.lophiester.webService.repositories.CategoryRepository;
-import com.lophiester.webService.services.exceptions.ResourceNotFoundException;
+import com.lophiester.webService.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public Category findById(Long id) {
         Optional<Category> obj = categoryRepository.findById(id);
-        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Category.class.getName() + "with id:" + id));
     }
 
     @Transactional
@@ -43,6 +43,8 @@ public class CategoryService {
 
     @Transactional
     public void delete(Long id) {
+        findById(id);
+
         categoryRepository.deleteById(id);
     }
 

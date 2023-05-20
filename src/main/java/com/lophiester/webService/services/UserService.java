@@ -1,14 +1,12 @@
 package com.lophiester.webService.services;
 
 import com.lophiester.webService.entities.User;
-import com.lophiester.webService.entities.User;
-import com.lophiester.webService.entities.dto.ProductDTO;
 import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.repositories.UserRepository;
-import com.lophiester.webService.services.exceptions.ResourceNotFoundException;
+import com.lophiester.webService.services.exceptions.DataIntegrityException;
+import com.lophiester.webService.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,46 +17,53 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional(readOnly = true)
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream().map(UserDTO::new).toList();
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public UserDTO findById(Long id) {
+    public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.map(UserDTO::new).orElseThrow(() -> new ResourceNotFoundException(id));
+        return user.orElseThrow(() -> new ObjectNotFoundException("Object not found" + User.class.getName() + " with id: " + id));
     }
 
-    @Transactional
-    public void deleteById(Long id) {
-        if (userRepository.existsById(id)) {
+    public User save(User user) {
+        user.setId(null);
+        return userRepository.save(user);
+    }
+
+    public User update(User oldObj) {
+        User newObj = findById(oldObj.getId());
+        updateData(newObj, oldObj);
+        return newObj;
+
+    }
+
+    public void delete(Long id) {
+        findById(id);
+        try {
             userRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityException e) {
+            throw new DataIntegrityException("Cannot delete user with id: " + id + " because it is used in other entities");
+        } catch (ObjectNotFoundException e) {
+            throw new ObjectNotFoundException("Object not found" + User.class.getName() + " with id: " + id);
         }
-
     }
 
-    @Transactional
-    public UserDTO save(UserDTO userDTO) {
+    public User fromDTO(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         user.setPassword(userDTO.getPassword());
-        userRepository.save(user);
-        return new UserDTO(user);
+        return user;
     }
 
-    @Transactional
-    public UserDTO update(UserDTO userDTO, Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(user.getPhone());
-        user.setPassword(userDTO.getPassword());
-        userRepository.save(user);
-        return new UserDTO(user);
-}}
+    public void updateData(User newObj, User oldObj) {
+        newObj.setUsername(oldObj.getUsername());
+        newObj.setEmail(oldObj.getEmail());
+        newObj.setPhone(oldObj.getPhone());
+        newObj.setPassword(oldObj.getPassword());
+        userRepository.save(newObj);
+    }
+}
 

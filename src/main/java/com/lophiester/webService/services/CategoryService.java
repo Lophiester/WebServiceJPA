@@ -5,6 +5,9 @@ import com.lophiester.webService.entities.dto.CategoryDTO;
 import com.lophiester.webService.repositories.CategoryRepository;
 import com.lophiester.webService.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,13 @@ public class CategoryService {
         return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Category.class.getName() + "with id:" + id));
     }
 
+    @Transactional(readOnly = true)
+    public Page<Category> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return categoryRepository.findAll(pageRequest);
+    }
+
+
     @Transactional
     public Category save(Category obj) {
         obj.setId(null);
@@ -42,9 +52,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         findById(id);
-
         categoryRepository.deleteById(id);
     }
 

@@ -5,6 +5,7 @@ import com.lophiester.webService.entities.dto.ProductDTO;
 import com.lophiester.webService.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,18 +36,23 @@ public class ProductController {
         return ResponseEntity.ok().body(new ProductDTO(product));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        productService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/page")
+    public ResponseEntity<Page<ProductDTO>> findPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+        Page<Product> list = productService.findPage(page, linesPerPage, direction, orderBy);
+        Page<ProductDTO> listDTO = list.map(ProductDTO::new);
+        return ResponseEntity.ok(listDTO);
     }
+
 
     @PostMapping
     public ResponseEntity<Product> save(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productService.fromDTO(productDTO);
         URI uri = create("/products" + productDTO.getId());
-        productService.save(product);
-        return ResponseEntity.created(uri).body(product);
+        return ResponseEntity.created(uri).body(productService.save(product));
     }
 
     @PutMapping("/{id}")
@@ -55,5 +61,11 @@ public class ProductController {
         product.setId(id);
         return ResponseEntity.ok().body(productService.update(product));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        productService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

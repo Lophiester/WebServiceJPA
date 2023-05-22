@@ -5,6 +5,7 @@ import com.lophiester.webService.entities.dto.UserDTO;
 import com.lophiester.webService.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,17 @@ public class UserController {
         return ResponseEntity.ok().body(new UserDTO(user));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<Page<UserDTO>> findPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+        Page<User> users = userService.findPage(page, linesPerPage, orderBy, direction);
+        Page<UserDTO> usersDTO = users.map(UserDTO::new);
+        return ResponseEntity.ok().body(usersDTO);
+    }
+
     @PostMapping
     public ResponseEntity<User> save(@Valid @RequestBody UserDTO dto) {
         User user = userService.fromDTO(dto);
@@ -47,10 +59,12 @@ public class UserController {
         user.setId(id);
         return ResponseEntity.ok().body(userService.update(user));
     }
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        userService.delete(id);
-    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        return ResponseEntity.noContent().build();
+    }
 }
+
+
 

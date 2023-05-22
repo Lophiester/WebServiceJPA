@@ -6,6 +6,9 @@ import com.lophiester.webService.repositories.ProductRepository;
 import com.lophiester.webService.services.exceptions.DataIntegrityException;
 import com.lophiester.webService.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,17 +32,10 @@ public class ProductService {
         Optional<Product> list = productRepository.findById(id);
         return list.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Product.class.getName()));
     }
-
-    @Transactional
-    public void deleteById(Long id) {
-        findById(id);
-        try {
-            productRepository.deleteById(id);
-        } catch (DataIntegrityException e) {
-            throw new DataIntegrityException("Cannot delete user with id: " + id + " because it is used in other entities");
-        } catch (ObjectNotFoundException e) {
-            new ObjectNotFoundException("Object not found" + Product.class.getName() + "with id: " + id);
-        }
+    @Transactional(readOnly = true)
+   public Page<Product> findPage(Integer page,Integer linesPerPage,String direction, String orderBy){
+        PageRequest pageRequest= PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction),orderBy);
+        return productRepository.findAll(pageRequest);
     }
 
     @Transactional
@@ -53,6 +49,18 @@ public class ProductService {
         Product newObj = findById(oldObj.getId());
         updateData(newObj, oldObj);
         return (newObj);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        findById(id);
+        try {
+            productRepository.deleteById(id);
+        } catch (DataIntegrityException e) {
+            throw new DataIntegrityException("Cannot delete user with id: " + id + " because it is used in other entities");
+        } catch (ObjectNotFoundException e) {
+            throw new ObjectNotFoundException("Object not found" + Product.class.getName() + "with id: " + id);
+        }
     }
 
 

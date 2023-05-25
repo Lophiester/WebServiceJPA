@@ -6,6 +6,9 @@ import com.lophiester.webService.services.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +40,9 @@ public class CategoryController {
     @GetMapping("/page")
     public ResponseEntity<Page<CategoryDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "10") Integer size,
-            @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+            @RequestParam(value = "size", defaultValue = "5") Integer size,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Category> categories = categoryService.findPage(page, size, orderBy, direction);
         Page<CategoryDTO> dto = categories.map(CategoryDTO::new);
         return ResponseEntity.ok().body(dto);

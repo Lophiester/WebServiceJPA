@@ -1,7 +1,6 @@
 package com.lophiester.webService.enums;
 
 import jakarta.persistence.Enumerated;
-import lombok.ToString;
 
 
 public enum OrderStatus {

@@ -31,8 +31,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Order> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    public Page<Order> findPage(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
         return orderRepository.findAll(pageRequest);
 
     }

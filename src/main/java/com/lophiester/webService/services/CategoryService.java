@@ -32,8 +32,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Category> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    public Page<Category> findPage(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
         return categoryRepository.findAll(pageRequest);
     }
 

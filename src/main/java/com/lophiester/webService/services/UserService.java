@@ -33,8 +33,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<User> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    public Page<User> findPage(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
         return userRepository.findAll(pageRequest);
 
 

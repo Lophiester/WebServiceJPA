@@ -33,8 +33,8 @@ public class ProductService {
         return list.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Product.class.getName()));
     }
     @Transactional(readOnly = true)
-   public Page<Product> findPage(Integer page,Integer linesPerPage,String direction, String orderBy){
-        PageRequest pageRequest= PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction),orderBy);
+   public Page<Product> findPage(Integer page,Integer size,String direction, String orderBy){
+        PageRequest pageRequest= PageRequest.of(page,size, Sort.Direction.valueOf(direction),orderBy);
         return productRepository.findAll(pageRequest);
     }
 

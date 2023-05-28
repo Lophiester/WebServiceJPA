@@ -18,12 +18,12 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> findAll() {
-        return ResponseEntity.ok(orderService.findAll());
+        return ResponseEntity.ok().body(orderService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.findById(id));
+        return ResponseEntity.ok().body(orderService.findById(id));
     }
 
     @GetMapping("/page")

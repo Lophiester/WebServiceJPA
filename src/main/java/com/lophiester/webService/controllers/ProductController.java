@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<ProductDTO>> findPageDTO(
+    public ResponseEntity<Page<ProductDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,

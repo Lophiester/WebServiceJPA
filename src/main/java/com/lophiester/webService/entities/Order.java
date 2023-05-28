@@ -3,14 +3,16 @@ package com.lophiester.webService.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lophiester.webService.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -31,6 +33,11 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "id.order")
+    @Setter(AccessLevel.NONE)
+
+    private final Set<OrderItem> items= new HashSet<>();
 
     public Order(Long id,Instant date, OrderStatus orderStatus,User user) {
         this.id = id;

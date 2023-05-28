@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.net.URI.create;
 
@@ -24,10 +23,9 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> findAll() {
+    public ResponseEntity<List<Product>> findAll() {
         List<Product> list = productService.findAll();
-        List<ProductDTO> listDTO = list.stream().map(ProductDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok(listDTO);
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{id}")
@@ -37,14 +35,14 @@ public class ProductController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<ProductDTO>> findPage(
+    public ResponseEntity<Page<ProductDTO>> findPageDTO(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<Product> list = productService.findPage(page, linesPerPage, direction, orderBy);
+        Page<Product> list = productService.findPage(page, size, direction, orderBy);
         Page<ProductDTO> listDTO = list.map(ProductDTO::new);
-        return ResponseEntity.ok(listDTO);
+        return ResponseEntity.ok().body(listDTO);
     }
 
 

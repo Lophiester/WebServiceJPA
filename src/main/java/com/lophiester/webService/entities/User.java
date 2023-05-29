@@ -31,7 +31,7 @@ public class User {
    @Setter(AccessLevel.PROTECTED)
    @JsonIgnore
    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-   private static Set<Order> orders = new HashSet<>();
+   private final Set<Order> orders = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

@@ -16,28 +16,30 @@ import java.util.Set;
 
 
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "tb_order")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @Getter
+    @Setter
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    @Getter
+    @Setter
     Instant date;
-
     private Integer orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @Getter
+    @Setter
     private User user;
 
-    @OneToMany(mappedBy = "id.order")
-    @Setter(AccessLevel.NONE)
-
-    private final Set<OrderItem> items= new HashSet<>();
+    @OneToMany(mappedBy = "id.order", fetch = FetchType.EAGER)
+    @Getter
+    private  Set<OrderItem> items= new HashSet<>();
 
     public Order(Long id,Instant date, OrderStatus orderStatus,User user) {
         this.id = id;
@@ -55,6 +57,7 @@ public class Order {
         if(orderStatus != null){
         this.orderStatus = orderStatus.getValue();
     }}
+
 
     @Override
     public boolean equals(Object o) {

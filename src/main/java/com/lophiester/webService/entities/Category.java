@@ -23,7 +23,7 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
-    public final Set<Product> products = new HashSet<>();
+    private final Set<Product> products = new HashSet<>();
 
 
     @Override

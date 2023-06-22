@@ -1,6 +1,7 @@
 package com.lophiester.webService.config;
 
 import com.lophiester.webService.entities.*;
+import com.lophiester.webService.entities.enums.CustomerType;
 import com.lophiester.webService.enums.OrderStatus;
 import com.lophiester.webService.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,13 @@ public class TestConfig implements CommandLineRunner {
     private OrderRepository orderRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private AddressRepository  addressRepository;
 
     @Autowired
     private StateRepository stateRepository;
@@ -38,11 +43,38 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        User u1 = new User(null, "Maria Brown", "maria@gmail.com", "2133213", "988888888");
-        User u2 = new User(null, "Alex Green", "alex@gmail.com", "121212", "977777777");
-        User u3 = new User(null, "Luan Nav", "luan@gmail.com", "121212", "2131231");
+        State s1 = new State(null, "Minas Gerais");
+        State s2 = new State(null, "São Paulo");
+
+        City c1 = new City(null, "Uberlandia", s1);
+        City c2 = new City(null, "Guarulhos", s2);
+        City c3 = new City(null, "Campinas", s2);
+
+        s1.getCities().add(c1);
+        s2.getCities().add(c2);
+        s2.getCities().add(c3);
+
+        stateRepository.saveAll(Arrays.asList(s1, s2));
+        cityRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+        User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", CustomerType.PESSOAFISICA);
+        User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", CustomerType.PESSOAFISICA);
+        User u3 = new User(null, "Luan Nav", "luan@gmail.com", "121212", CustomerType.PESSOAJURIDICA);
+
+        u1.getPhoneNumber().addAll(Arrays.asList("11111111111", "222222"));
+        u2.getPhoneNumber().addAll(Arrays.asList("333333333", "99595955"));
+        u3.getPhoneNumber().addAll(Arrays.asList("444444444"));
+
+
+        Address a1 = new Address(null, "Rua Lord", "23", null, "jd Esperanca", "071234-50", u1, c1);
+        Address a2 = new Address(null, "Rua das Flores", "235", "apato","jd das flores", "071234-50", u1, c2);
+
+        u1.getAddresses().addAll(Arrays.asList(a1, a2));
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3));
+
+        addressRepository.saveAll(Arrays.asList(a1, a2));
+
 
         Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS, u1);
         Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING, u2);
@@ -92,19 +124,6 @@ public class TestConfig implements CommandLineRunner {
         o1.setPayment(pay1);
         orderRepository.save(o1);
 
-        State s1 = new State(null, "Minas Gerais");
-        State s2 = new State(null, "São Paulo");
-
-        City c1 = new City(null, "Uberlandia", s1);
-        City c2 = new City(null, "Guarulhos", s2);
-        City c3 = new City(null, "Campinas", s2);
-
-        s1.getCities().add(c1);
-        s2.getCities().add(c2);
-        s2.getCities().add(c3);
-
-        stateRepository.saveAll(Arrays.asList(s1, s2));
-        cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
     }
 }

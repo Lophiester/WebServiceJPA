@@ -64,16 +64,12 @@ public class UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        user.setPassword(userDTO.getPassword());
         return user;
     }
 
     public void updateData(User newObj, User oldObj) {
         newObj.setUsername(oldObj.getUsername());
         newObj.setEmail(oldObj.getEmail());
-        newObj.setPhone(oldObj.getPhone());
-        newObj.setPassword(oldObj.getPassword());
         userRepository.save(newObj);
     }
 }

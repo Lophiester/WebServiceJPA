@@ -31,8 +31,8 @@ public class CategoryController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Long id) {
+    @GetMapping()
+    public ResponseEntity<Category> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
 
@@ -52,8 +52,8 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryService.update(category));
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    @DeleteMapping()
+    public void delete(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
         categoryService.deleteById(id);
     }
 }

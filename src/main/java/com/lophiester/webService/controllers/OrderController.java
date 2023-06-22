@@ -23,8 +23,8 @@ public class OrderController {
         Page<Order> orders = orderService.findAll(page, size, sort, direction);
         return ResponseEntity.ok().body(orders);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<Order> findById(@PathVariable Long id) {
+    @GetMapping()
+    public ResponseEntity<Order> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
         return ResponseEntity.ok().body(orderService.findById(id));
     }
 }

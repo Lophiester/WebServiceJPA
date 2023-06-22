@@ -19,7 +19,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Transactional(readOnly = true)
     public Page<User> findAll(Integer page, Integer size, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);

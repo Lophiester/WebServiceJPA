@@ -31,8 +31,8 @@ public class ProductController {
         return ResponseEntity.ok().body(listDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id) {
+    @GetMapping()
+    public ResponseEntity<Product> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
@@ -51,8 +51,8 @@ public class ProductController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

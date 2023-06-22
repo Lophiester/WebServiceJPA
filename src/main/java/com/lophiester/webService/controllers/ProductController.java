@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 import static java.net.URI.create;
 
@@ -21,29 +20,21 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-
-    @GetMapping
-    public ResponseEntity<List<Product>> findAll() {
-        List<Product> list = productService.findAll();
-        return ResponseEntity.ok().body(list);
+    @GetMapping("/page")
+    public ResponseEntity<Page<ProductDTO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+        Page<Product> list = productService.findAll(page, size, direction, orderBy);
+        Page<ProductDTO> listDTO = list.map(ProductDTO::new);
+        return ResponseEntity.ok().body(listDTO);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.findById(id));
     }
-
-    @GetMapping("/page")
-    public ResponseEntity<Page<ProductDTO>> findPage(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<Product> list = productService.findPage(page, size, direction, orderBy);
-        Page<ProductDTO> listDTO = list.map(ProductDTO::new);
-        return ResponseEntity.ok().body(listDTO);
-    }
-
 
     @PostMapping
     public ResponseEntity<Product> save(@Valid @RequestBody ProductDTO productDTO) {

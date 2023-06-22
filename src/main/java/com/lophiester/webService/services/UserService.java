@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,25 +19,20 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Page<User> findAll(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
+        return userRepository.findAll(pageRequest);
+
     }
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new ObjectNotFoundException("Object not found" + User.class.getName() + " with id: " + id));
+        return user.orElseThrow(() -> new ObjectNotFoundException("Object not found " + User.class.getName() + " with id: " + id));
     }
 
-    @Transactional(readOnly = true)
-    public Page<User> findPage(Integer page, Integer size, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
-        return userRepository.findAll(pageRequest);
-
-
-    }
 
     @Transactional
     public User save(User user) {
@@ -63,8 +57,6 @@ public class UserService {
             userRepository.deleteById(id);
         } catch (DataIntegrityException e) {
             throw new DataIntegrityException("Cannot delete user with id: " + id + " because it is used in other entities");
-        } catch (ObjectNotFoundException e) {
-            throw new ObjectNotFoundException("Object not found" + User.class.getName() + " with id: " + id);
         }
     }
 

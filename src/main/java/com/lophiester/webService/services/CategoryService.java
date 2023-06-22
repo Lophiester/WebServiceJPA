@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,23 +20,15 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public Page<Category> findAll(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
+        return categoryRepository.findAll(pageRequest);
     }
-
     @Transactional(readOnly = true)
     public Category findById(Long id) {
         Optional<Category> obj = categoryRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Category.class.getName() + "with id:" + id));
     }
-
-    @Transactional(readOnly = true)
-    public Page<Category> findPage(Integer page, Integer size, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
-        return categoryRepository.findAll(pageRequest);
-    }
-
-
     @Transactional
     public Category save(Category obj) {
         obj.setId(null);

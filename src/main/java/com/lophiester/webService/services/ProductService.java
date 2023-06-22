@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +22,9 @@ public class ProductService {
     ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public Page<Product> findAll(Integer page,Integer size,String direction, String orderBy){
+        PageRequest pageRequest= PageRequest.of(page,size, Sort.Direction.valueOf(direction),orderBy);
+        return productRepository.findAll(pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -32,11 +32,7 @@ public class ProductService {
         Optional<Product> list = productRepository.findById(id);
         return list.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Product.class.getName()));
     }
-    @Transactional(readOnly = true)
-   public Page<Product> findPage(Integer page,Integer size,String direction, String orderBy){
-        PageRequest pageRequest= PageRequest.of(page,size, Sort.Direction.valueOf(direction),orderBy);
-        return productRepository.findAll(pageRequest);
-    }
+
 
     @Transactional
     public Product save(Product product) {

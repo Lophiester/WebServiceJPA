@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,10 +17,11 @@ public class OrderService {
 
     @Autowired
     OrderRepository orderRepository;
-
     @Transactional(readOnly = true)
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    public Page<Order> findAll(Integer page, Integer size, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
+        return orderRepository.findAll(pageRequest);
+
     }
 
     @Transactional(readOnly = true)
@@ -30,12 +30,7 @@ public class OrderService {
         return order.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Order.class.getName() + "with id:" + id));
     }
 
-    @Transactional(readOnly = true)
-    public Page<Order> findPage(Integer page, Integer size, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
-        return orderRepository.findAll(pageRequest);
 
-    }
 
 
 }

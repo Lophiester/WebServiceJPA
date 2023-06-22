@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.net.URI.create;
 
@@ -22,12 +20,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<UserDTO>> findAll() {
         List<User> users = userService.findAll();
         List<UserDTO> usersDTO = users.stream().map(UserDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersDTO);
-    }
+    }*/
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
@@ -36,12 +34,12 @@ public class UserController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<UserDTO>> findPage(
+    public ResponseEntity<Page<UserDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-        Page<User> users = userService.findPage(page, linesPerPage, orderBy, direction);
+        Page<User> users = userService.findAll(page, linesPerPage, orderBy, direction);
         Page<UserDTO> usersDTO = users.map(UserDTO::new);
         return ResponseEntity.ok().body(usersDTO);
     }

@@ -29,6 +29,12 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private StateRepository stateRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -38,9 +44,9 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3));
 
-        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS,u1);
-        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING,u2);
-        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED,u1);
+        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS, u1);
+        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING, u2);
+        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED, u1);
 
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
 
@@ -49,7 +55,6 @@ public class TestConfig implements CommandLineRunner {
         Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
         Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
         Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
-
 
 
         Category cat1 = new Category(null, "Electronics");
@@ -64,7 +69,7 @@ public class TestConfig implements CommandLineRunner {
         Category cat10 = new Category(null, "Lamps");
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
-        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3,cat4, cat5, cat6, cat7, cat8, cat9, cat10));
+        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10));
 
 
         p1.getCategories().add(cat2);
@@ -74,18 +79,32 @@ public class TestConfig implements CommandLineRunner {
         p4.getCategories().add(cat3);
         p5.getCategories().add(cat2);
 
-        productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
+        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
         OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
         OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
         OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
-        orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 
-        Payment pay1= new Payment(null,Instant.parse("2023-06-20T21:53:07Z"),o1);
+        Payment pay1 = new Payment(null, Instant.parse("2023-06-20T21:53:07Z"), o1);
         o1.setPayment(pay1);
         orderRepository.save(o1);
+
+        State s1 = new State(null, "Minas Gerais");
+        State s2 = new State(null, "São Paulo");
+
+        City c1 = new City(null, "Uberlandia", s1);
+        City c2 = new City(null, "Guarulhos", s2);
+        City c3 = new City(null, "Campinas", s2);
+
+        s1.getCities().add(c1);
+        s2.getCities().add(c2);
+        s2.getCities().add(c3);
+
+        stateRepository.saveAll(Arrays.asList(s1, s2));
+        cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
     }
 }

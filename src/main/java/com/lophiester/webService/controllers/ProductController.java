@@ -20,7 +20,7 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/page")
+    @GetMapping()
     public ResponseEntity<Page<ProductDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
@@ -31,8 +31,8 @@ public class ProductController {
         return ResponseEntity.ok().body(listDTO);
     }
 
-    @GetMapping()
-    public ResponseEntity<Product> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
@@ -51,8 +51,8 @@ public class ProductController {
 
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Void> deleteById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -27,21 +27,20 @@ public class UserController {
         return ResponseEntity.ok().body(usersDTO);
     }*/
 
-    @GetMapping()
-    public ResponseEntity<User> findById(@RequestParam(value = "id",defaultValue = "") @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id) {
         User user = userService.findById(id);
         return ResponseEntity.ok().body(user);
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<Page<UserDTO>> findAll(
+    @GetMapping()
+    public ResponseEntity<Page<User>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
         Page<User> users = userService.findAll(page, linesPerPage, orderBy, direction);
-        Page<UserDTO> usersDTO = users.map(UserDTO::new);
-        return ResponseEntity.ok().body(usersDTO);
+        return ResponseEntity.ok().body(users);
     }
 
     @PostMapping
@@ -58,8 +57,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.update(user));
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Void> deleteById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         return ResponseEntity.noContent().build();
     }
 }

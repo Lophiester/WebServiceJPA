@@ -14,8 +14,8 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/page")
-    public ResponseEntity<Page<Order>> findPage(
+    @GetMapping()
+    public ResponseEntity<Page<Order>> findAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "orderBy", defaultValue = "id") String sort,
@@ -23,8 +23,8 @@ public class OrderController {
         Page<Order> orders = orderService.findAll(page, size, sort, direction);
         return ResponseEntity.ok().body(orders);
     }
-    @GetMapping()
-    public ResponseEntity<Order> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(orderService.findById(id));
     }
 }

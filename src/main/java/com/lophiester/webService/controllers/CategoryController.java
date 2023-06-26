@@ -20,7 +20,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/page")
+    @GetMapping()
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
@@ -31,8 +31,8 @@ public class CategoryController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping()
-    public ResponseEntity<Category> findById(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
 
@@ -52,8 +52,8 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryService.update(category));
     }
 
-    @DeleteMapping()
-    public void delete(@RequestParam(value = "id",defaultValue = "")@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
 }

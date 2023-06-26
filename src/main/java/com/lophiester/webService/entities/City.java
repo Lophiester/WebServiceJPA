@@ -1,5 +1,6 @@
 package com.lophiester.webService.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class City {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;

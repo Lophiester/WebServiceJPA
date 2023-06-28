@@ -47,6 +47,7 @@ public class Product {
     private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "id.product")
+    @Getter
     private Set<OrderItem> items = new HashSet<>();
 
     @JsonIgnore

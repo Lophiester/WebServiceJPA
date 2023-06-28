@@ -25,12 +25,16 @@ public class OrderItem {
     @Getter
     @Setter
     private Double price;
+    @Getter
+    @Setter
+    private Double discountPrice;
 
-    public OrderItem(Order order, Product product, Integer quantity, Double price) {
+    public OrderItem(Order order, Product product, Integer quantity, Double price,Double discountPrice) {
         id.setOrder(order);
         id.setProduct(product);
         this.quantity = quantity;
         this.price = price;
+        this.discountPrice = discountPrice;
 
     }
 

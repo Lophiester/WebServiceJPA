@@ -1,11 +1,14 @@
 package com.lophiester.webService.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lophiester.webService.entities.enums.CustomerType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,9 +29,10 @@ public class User {
     private Integer type;
 
 
-    @Setter(AccessLevel.PROTECTED)
-    @JsonIgnore
+
+    @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Setter(AccessLevel.PROTECTED)
     private  Set<Order> orders = new HashSet<>();
 
     @JsonManagedReference

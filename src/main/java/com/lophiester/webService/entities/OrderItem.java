@@ -16,6 +16,7 @@ import lombok.Setter;
 @Table(name = "tb_order_item")
 public class OrderItem {
 
+    @JsonIgnore
     @EmbeddedId
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private OrderItemPK id = new OrderItemPK();

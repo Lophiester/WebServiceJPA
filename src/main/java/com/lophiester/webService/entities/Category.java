@@ -1,8 +1,10 @@
 package com.lophiester.webService.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +24,6 @@ public class Category {
 
 
     @ManyToMany(mappedBy = "categories")
-    @JsonIgnore
     private final Set<Product> products = new HashSet<>();
 
 

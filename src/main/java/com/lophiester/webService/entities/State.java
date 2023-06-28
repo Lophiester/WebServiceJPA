@@ -1,6 +1,6 @@
 package com.lophiester.webService.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class State {
     private Long id;
     private String name;
 
-    @JsonBackReference
+    @JsonIgnore
     @Setter(AccessLevel.PROTECTED)
     @OneToMany(mappedBy = "state")
     private Set<City> cities = new HashSet<>();

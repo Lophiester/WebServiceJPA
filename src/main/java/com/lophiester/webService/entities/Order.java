@@ -1,7 +1,6 @@
 package com.lophiester.webService.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +28,7 @@ public class Order {
     @Setter
     Instant date;
 
-    @JsonManagedReference
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @Getter
@@ -40,7 +39,6 @@ public class Order {
     @Getter
     private  Set<OrderItem> items= new HashSet<>();
 
-    @JsonManagedReference
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     @Getter
     @Setter

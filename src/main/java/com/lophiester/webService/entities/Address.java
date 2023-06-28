@@ -1,6 +1,6 @@
 package com.lophiester.webService.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class Address {
     private String zipCode;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

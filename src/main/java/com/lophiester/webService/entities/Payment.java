@@ -1,6 +1,6 @@
 package com.lophiester.webService.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lophiester.webService.entities.enums.StatusPayment;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public abstract class Payment {
     private Long id;
     private Integer status;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "order_id")
     @MapsId

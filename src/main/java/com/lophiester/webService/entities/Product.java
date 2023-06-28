@@ -39,6 +39,7 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "tb_product_category",
             joinColumns = @JoinColumn(name = "product_id"),

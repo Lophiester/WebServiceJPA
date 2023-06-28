@@ -2,7 +2,7 @@ package com.lophiester.webService.config;
 
 import com.lophiester.webService.entities.*;
 import com.lophiester.webService.entities.enums.CustomerType;
-import com.lophiester.webService.enums.OrderStatus;
+import com.lophiester.webService.entities.enums.StatusPayment;
 import com.lophiester.webService.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -40,6 +40,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private CityRepository cityRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -76,11 +79,19 @@ public class TestConfig implements CommandLineRunner {
         addressRepository.saveAll(Arrays.asList(a1, a2));
 
 
-        Order o1 = new Order(null, Instant.parse("2023-06-20T19:53:07Z"), OrderStatus.PAYMENT_SUCCESS, u1);
-        Order o2 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_PENDING, u2);
-        Order o3 = new Order(null, Instant.parse("2023-03-03T13:03:03Z"), OrderStatus.PAYMENT_FAILED, u1);
+        Order o1 = new Order(null, Instant.parse("2023-06-02T19:53:07Z"),u1,a1);
+        Order o2 = new Order(null, Instant.parse("2023-06-01T13:03:03Z"),u1,a2);
 
-        orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+        Payment pay1= new PaymentWithCard(null, StatusPayment.PAYMENT_SUCCESS,o1,6);
+        o1.setPayment(pay1);
+
+        Payment pay2= new PaymentWithBoleto(null,StatusPayment.PAYMENT_PENDING,o2,Instant.parse("2023-06-30T19:53:07Z"),null);
+        o2.setPayment(pay2);
+
+        u1.getOrders().addAll(Arrays.asList(o1, o2));
+
+        orderRepository.saveAll(Arrays.asList(o1, o2));
+        paymentRepository.saveAll(Arrays.asList(pay1, pay2));
 
         Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
         Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
@@ -116,12 +127,10 @@ public class TestConfig implements CommandLineRunner {
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
         OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
         OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
-        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
-        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3));
 
-        Payment pay1 = new Payment(null, Instant.parse("2023-06-20T21:53:07Z"), o1);
-        o1.setPayment(pay1);
+
         orderRepository.save(o1);
 
 

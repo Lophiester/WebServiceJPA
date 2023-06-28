@@ -1,9 +1,7 @@
 package com.lophiester.webService.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lophiester.webService.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +27,6 @@ public class Order {
     @Getter
     @Setter
     Instant date;
-    private Integer orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,23 +42,25 @@ public class Order {
     @Getter
     @Setter
     private Payment payment;
+    @ManyToOne
+    @JoinColumn(name = "delivery_address_id")
+    private Address deliveryAddress;
 
-    public Order(Long id,Instant date, OrderStatus orderStatus,User user) {
-        this.id = id;
-        this.date = date;
-        setOrderStatus(orderStatus);
-        this.user = user;
+    public Address getDeliveryAddress() {
+        return deliveryAddress;
     }
 
-    public OrderStatus getOrderStatus() {
+    public void setDeliveryAddress(Address deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
 
-        return OrderStatus.fromValue(orderStatus);}
 
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        if(orderStatus != null){
-        this.orderStatus = orderStatus.getValue();
-    }}
+    public Order(Long id, Instant date, User user, Address deliveryAddress) {
+        this.id = id;
+        this.date = date;
+        this.user = user;
+        this.deliveryAddress = deliveryAddress;
+    }
 
     public Double getTotal() {
         double sum = 0.0;

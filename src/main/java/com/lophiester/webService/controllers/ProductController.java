@@ -36,6 +36,11 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Product> findByNameIgnoreCase(@PathVariable String name) {
+        return ResponseEntity.ok().body(productService.findByName(name));
+    }
+
     @PostMapping
     public ResponseEntity<Product> save(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productService.fromDTO(productDTO);

@@ -29,6 +29,10 @@ public class CategoryService {
         Optional<Category> obj = categoryRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Category.class.getName() + "with id:" + id));
     }
+
+    public Category findByName(String name){
+        return categoryRepository.findByNameIgnoreCase(name);
+    }
     @Transactional
     public Category save(Category obj) {
         obj.setId(null);
@@ -55,4 +59,6 @@ public class CategoryService {
     public void updateData(Category newObj, Category oldObj) {
         newObj.setName(oldObj.getName());
     }
+
+
 }

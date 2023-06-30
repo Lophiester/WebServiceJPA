@@ -32,6 +32,10 @@ public class ProductService {
         Optional<Product> list = productRepository.findById(id);
         return list.orElseThrow(() -> new ObjectNotFoundException("Object not found" + Product.class.getName()));
     }
+    @Transactional(readOnly = true)
+    public Product findByName(String name) {
+        return productRepository.findByNameIgnoreCase(name);
+    }
 
 
     @Transactional

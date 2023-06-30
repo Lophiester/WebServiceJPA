@@ -31,13 +31,14 @@ public class CategoryController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
-
-
-
+    @GetMapping("name/{name}")
+    public ResponseEntity<Category> findByName(@PathVariable String name) {
+        return ResponseEntity.ok().body(categoryService.findByName(name));
+    }
     @PostMapping
     public ResponseEntity<Category> save(@Valid @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService.fromDTO(categoryDTO);

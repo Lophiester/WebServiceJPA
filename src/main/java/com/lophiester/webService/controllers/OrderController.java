@@ -17,9 +17,9 @@ public class OrderController {
     @GetMapping()
     public ResponseEntity<Page<Order>> findAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "size", defaultValue = "24") int size,
             @RequestParam(value = "orderBy", defaultValue = "id") String sort,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Order> orders = orderService.findAll(page, size, sort, direction);
         return ResponseEntity.ok().body(orders);
     }

@@ -23,9 +23,9 @@ public class ProductController {
     @GetMapping()
     public ResponseEntity<Page<ProductDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "size", defaultValue = "24") Integer size,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Product> list = productService.findAll(page, size, direction, orderBy);
         Page<ProductDTO> listDTO = list.map(ProductDTO::new);
         return ResponseEntity.ok().body(listDTO);

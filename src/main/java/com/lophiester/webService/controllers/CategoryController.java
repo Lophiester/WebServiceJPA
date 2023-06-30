@@ -23,7 +23,7 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "size", defaultValue = "24") Integer size,
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Page<Category> categories = categoryService.findAll(page, size, orderBy, direction);
@@ -31,7 +31,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(categoryService.findById(id));
     }

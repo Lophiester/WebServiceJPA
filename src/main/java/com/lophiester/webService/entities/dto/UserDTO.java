@@ -20,8 +20,7 @@ public class UserDTO implements Serializable {
     private String username;
     @Email
     private String email;
-    private String phone;
-    private String password;
+
 
     public UserDTO(User entity) {
         BeanUtils.copyProperties(entity, this);

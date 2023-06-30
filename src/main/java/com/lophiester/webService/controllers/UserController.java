@@ -34,13 +34,14 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<User>> findAll(
+    public ResponseEntity<Page<UserDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
         Page<User> users = userService.findAll(page, linesPerPage, orderBy, direction);
-        return ResponseEntity.ok().body(users);
+        Page<UserDTO> userDTO = users.map(UserDTO::new);
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @PostMapping
